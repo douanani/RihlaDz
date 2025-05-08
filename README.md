@@ -34,12 +34,12 @@
 3. شغل التطبيق:
 
     ```bash
-    npm run dev
+    npm start
     ```
 
 4. افتح المتصفح وادخل على الرابط التالي:
 
-    [http://localhost:5173](http://localhost:5173) (ولا حسب إعدادات Vite).
+    [http://localhost:3000](http://localhost:3000).
 
 ---
 
@@ -97,4 +97,4 @@
 تأكد أنك حاط API base URL في `frontend/.env` بهذا الشكل:
 
 ```env
-VITE_API_URL=http://localhost:8000/api
+REACT_APP_API_URL=http://localhost:8000/api
