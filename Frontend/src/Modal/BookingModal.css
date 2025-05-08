@@ -1,0 +1,52 @@
+.custom-modal .modal-content {
+    border-radius: 1.5rem;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to bottom right, #0a9396, #94d2bd);
+    color: white;
+  }
+  
+  .custom-modal .modal-header,
+  .custom-modal .modal-footer {
+    border: none;
+  }
+  
+  .custom-modal .modal-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  
+  .custom-modal .btn-success {
+    background: linear-gradient(to right, #007f5f, #2b9348);
+    border: none;
+  }
+  
+  .custom-modal .btn-secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+  }
+  
+  .custom-modal .list-group-item {
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding-left: 0;
+  }
+
+  .custom-backdrop {
+    backdrop-filter: blur(6px);
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .custom-modal .modal-content {
+    border-radius: 1.5rem;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to bottom right, #0a9396, #94d2bd);
+    color: white;
+  }
+  
+  .custom-modal .modal-header {
+    background: #0a9396;
+    color: white;
+  }
+  
