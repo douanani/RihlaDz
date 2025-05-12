@@ -1,28 +1,26 @@
-# React node_modules
-/frontend/node_modules/
-
-# React build
-/frontend/dist/
-/frontend/.next/
-
-# Laravel vendor
-/backend/vendor/
-
-# Laravel env file
-/backend/.env
-
-# Laravel storage
-/backend/storage/*.key
-/backend/storage/app/public/*
-!/backend/storage/app/public/.gitignore
-/backend/storage/framework/cache/data/*
-/backend/storage/framework/sessions/*
-/backend/storage/framework/testing/*
-/backend/storage/framework/views/*
-/backend/storage/logs/*.log
-
-# IDE
-.vscode/
-.idea/
-*.log
+# === GLOBAL ===
+node_modules/
+.env
 .DS_Store
+*.log
+*.bak
+*.tmp
+
+# === FRONTEND (React) ===
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.DS_Store
+
+# === BACKEND (Laravel) ===
+backend/vendor/
+backend/node_modules/
+backend/storage/*.key
+backend/storage/*.log
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/logs/*
+backend/.env
+backend/.DS_Store
+backend/public/storage
