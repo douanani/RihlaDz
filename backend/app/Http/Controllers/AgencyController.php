@@ -3,51 +3,88 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use App\Models\Agency;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use App\Models\Tour;
+use App\Models\Booking;
 
 class AgencyController extends Controller
 {
-    public function index()
+    // ✅ عرض بروفايل الوكالة
+    public function profile()
     {
-        return Agency::with('user')->get();
+        $agency = Auth::user();
+        return response()->json($agency);
     }
 
-    public function store(Request $request)
+    // ✅ تحديث معلومات الوكالة
+    public function updateProfile(Request $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'name' => 'required|string',
+        $agency = Auth::user();
+
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . $agency->id,
+            'phone' => 'sometimes|string|max:20',
             'description' => 'nullable|string',
         ]);
 
-        return Agency::create($validated);
-    }
-
-    public function show($id)
-    {
-        return Agency::with('tours')->findOrFail($id);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $agency = Agency::findOrFail($id);
         $agency->update($request->all());
 
-        return $agency;
+        return response()->json(['message' => 'Profile updated', 'agency' => $agency]);
     }
 
-    public function destroy($id)
+    // ✅ عرض كل الرحلات الخاصة بالوكالة
+    public function myTours()
     {
-        Agency::destroy($id);
-        return response()->json(['message' => 'Agency deleted']);
+        $tours = Tour::where('agency_id', Auth::id())->latest()->get();
+        return response()->json($tours);
     }
 
-    // Optional: Agency can get their own tours
-    public function myTours($id)
+    // ✅ عرض الحجوزات الخاصة بجولة معيّنة (خاصة بالوكالة)
+    public function bookingsForMyTour($tourId)
     {
-        $agency = Agency::with('tours')->findOrFail($id);
-        return $agency->tours;
+        $tour = Tour::where('id', $tourId)->where('agency_id', Auth::id())->firstOrFail();
+
+        $bookings = Booking::where('tour_id', $tour->id)->with('user')->latest()->get();
+
+        return response()->json($bookings);
     }
+    // ✅ حذف حساب الوكالة وكل الرحلات المرتبطة به
+    public function deleteAccount()
+    {
+    $agency = Auth::user();
+
+    // نحذف جميع الرحلات الخاصة بالوكالة
+    $agency->tours()->delete();
+
+    // نقدر نزيد هنا نحذف الصور من السيرفر لو كنت تخزنهم
+
+    // نحذف الحساب نفسه
+    $agency->delete();
+
+    return response()->json(['message' => 'Agency account and all related tours deleted successfully']);
+    }
+
+    public function confirmBooking($bookingId)
+{
+    // 🔐 نتأكد أن الحجز تابع لجولة تابعة للوكالة المسجلة
+    $booking = Booking::where('id', $bookingId)
+        ->whereHas('tour', function ($query) {
+            $query->where('agency_id', Auth::id());
+        })->firstOrFail();
+
+    // ✅ نأكد الحجز
+    $booking->is_confirmed = true;
+    $booking->save();
+
+    // 📢 نرسل إشعار للمستخدم
+    $user = $booking->user;
+    $user->notify(new \App\Notifications\BookingConfirmed($booking));
+
+    return response()->json(['message' => 'Booking confirmed!']);
 }
 
+
+}

@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Auth;
 
 class IsAdmin
 {
-    public function handle(Request $request, Closure $next): Response
-    {
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            return $next($request);
-        }
-
-        return response()->json(['message' => 'Unauthorized'], 403);
+    // app/Http/Middleware/IsAdmin.php
+public function handle($request, Closure $next)
+{
+    if (auth()->check() && auth()->user()->role === 'admin') {
+        return $next($request);
     }
+
+    return response()->json(['message' => 'Unauthorized - Admins only'], 403);
+}
+
 }

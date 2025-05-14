@@ -17,6 +17,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        
     ];
 
     /**
@@ -53,7 +54,9 @@ class Kernel extends HttpKernel
         'verified'   => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         //  Register your custom middleware here
-        'is_admin' => \App\Http\Middleware\IsAdmin::class,
+        'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+    'isAgency' => \App\Http\Middleware\IsAgency::class,
+    'isTourist' => \App\Http\Middleware\IsTourist::class,
     ];
 
 }

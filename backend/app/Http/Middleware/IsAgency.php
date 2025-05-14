@@ -13,13 +13,15 @@ class IsAgency
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next)
+// app/Http/Middleware/IsAgency.php
+public function handle($request, Closure $next)
 {
     if (auth()->check() && auth()->user()->role === 'agency') {
         return $next($request);
     }
 
-    abort(403, 'Only agencies can access this section');
+    return response()->json(['message' => 'Unauthorized - Agencies only'], 403);
 }
+
 
 }

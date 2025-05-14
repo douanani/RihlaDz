@@ -13,13 +13,15 @@ class IsTourist
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-  public function handle($request, Closure $next)
+// app/Http/Middleware/IsTourist.php
+public function handle($request, Closure $next)
 {
     if (auth()->check() && auth()->user()->role === 'tourist') {
         return $next($request);
     }
 
-    abort(403, 'Only tourists can access this section');
+    return response()->json(['message' => 'Unauthorized - Tourists only'], 403);
 }
+
 
 }
