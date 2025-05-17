@@ -1,110 +1,158 @@
-<?php
+// src/pages/Profile/AccountSettings.jsx
+import React from 'react';
+import {
+  Box,
+  Container,
+  Typography,
+  Avatar,
+  TextField,
+  Button,
+  Grid,
+  Tabs,
+  Tab,
+  Paper,
+  useTheme,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
+import { PhotoCamera, Delete, Facebook, Twitter, Visibility, VisibilityOff } from '@mui/icons-material';
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-// AUTH
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\NotificationController;
+export default function AccountSettings() {
+  const theme = useTheme();
+  const [tab, setTab] = React.useState(0);
+  const [showPassword, setShowPassword] = React.useState(false);
 
-// ADMIN
-use App\Http\Controllers\AdminController;
+  const handleTabChange = (e, newValue) => setTab(newValue);
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-// AGENCY
-use App\Http\Controllers\AgencyController;
-use App\Http\Controllers\TourController;
+  return (
+    <Box sx={{ py: 4, backgroundColor: theme.palette.background.default, minHeight: '100vh' }}>
+      <Container maxWidth="md">
+        <Grid container spacing={3}>
+          {/* Sidebar */}
+          <Grid item xs={12} md={4}>
+            <Paper sx={{ p: 3, textAlign: 'center' }}>
+              <Avatar
+                src="https://randomuser.me/api/portraits/men/32.jpg"
+                sx={{ width: 100, height: 100, mx: 'auto', mb: 2 }}
+              />
+              <IconButton color="primary" component="label">
+                <PhotoCamera />
+                <input hidden accept="image/*" type="file" />
+              </IconButton>
+              <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+                Maximum upload size is <strong>1 MB</strong>
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 2 }}>
+                Member Since: <strong>29 September 2019</strong>
+              </Typography>
+            </Paper>
+          </Grid>
 
-// TOURIST
-use App\Http\Controllers\TouristController;
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ReviewController;
+          {/* Form Area */}
+          <Grid item xs={12} md={8}>
+            <Paper sx={{ p: 3 }}>
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                Edit Profile
+              </Typography>
+              <Tabs value={tab} onChange={handleTabChange} textColor="primary">
+                <Tab label="User Info" />
+                <Tab label="Billing Information" />
+              </Tabs>
 
+              {tab === 0 && (
+                <Box component="form" sx={{ mt: 3 }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField fullWidth label="Full Name" defaultValue="James" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField fullWidth label="Username" defaultValue="Allan" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        type={showPassword ? 'text' : 'password'}
+                        label="Password"
+                        defaultValue="********"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={togglePasswordVisibility}>
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        type={showPassword ? 'text' : 'password'}
+                        label="Confirm Password"
+                        defaultValue="********"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={togglePasswordVisibility}>
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField fullWidth label="Email Address" defaultValue="demomail@mail.com" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField fullWidth label="Confirm Email Address" defaultValue="demomail@mail.com" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="Facebook Username"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Facebook color="primary" />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="Twitter Username"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Twitter sx={{ color: '#1DA1F2' }} />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Button variant="contained" color="primary" sx={{ mt: 3 }}>
+                    Update Info
+                  </Button>
+                </Box>
+              )}
 
-// ✅ AUTH ROUTES
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::middleware('guest')->group(function () {
-    Route::post('/register', [RegisteredUserController::class, 'store']);
-    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
-    Route::post('/reset-password', [NewPasswordController::class, 'store']);
-});
-
-Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
-    Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store']);
-    Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1']);
-});
-
-// ✅ ADMIN ROUTES
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
-    Route::get('/users', [AdminController::class, 'index']);
-    Route::get('/users/{id}', [AdminController::class, 'show']);
-    Route::delete('/users/{id}', [AdminController::class, 'destroy']);
-
-    Route::get('/agencies/pending', [AdminController::class, 'pendingAgencies']);
-    Route::post('/agencies/approve/{id}', [AdminController::class, 'approveAgency']);
-
-    Route::get('/stats', [AdminController::class, 'stats']);
-    Route::get('/profile', [AdminController::class, 'profile']);
-    Route::put('/profile', [AdminController::class, 'updateProfile']);
-});
-
-// ✅ AGENCY ROUTES
-Route::middleware(['auth', 'isAgency'])->prefix('agency')->group(function () {
-    Route::get('/profile', [AgencyController::class, 'profile']);
-    Route::put('/profile', [AgencyController::class, 'updateProfile']);
-
-    Route::get('/tours', [TourController::class, 'index']);
-    Route::post('/tours', [TourController::class, 'store']);
-    Route::get('/tours/{id}', [TourController::class, 'show']);
-    Route::put('/tours/{id}', [TourController::class, 'update']);
-    Route::delete('/tours/{id}', [TourController::class, 'destroy']);
-
-    Route::get('/bookings', [AgencyController::class, 'bookings']);
-    Route::post('/bookings/{id}/confirm', [AgencyController::class, 'confirmBooking']);
-});
-
-// ✅ TOURIST ROUTES
-Route::middleware(['auth', 'isTourist'])->prefix('tourist')->group(function () {
-    Route::get('/profile', [TouristController::class, 'profile']);
-    Route::put('/profile', [TouristController::class, 'updateProfile']);
-
-    Route::get('/tours', [TourController::class, 'publicIndex']);
-    Route::get('/tours/{id}', [TourController::class, 'show']);
-
-    Route::get('/bookings', [BookingController::class, 'index']);
-    Route::post('/bookings', [BookingController::class, 'store']);
-    Route::get('/bookings/{id}', [BookingController::class, 'show']);
-    Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
-
-    Route::post('/payments', [PaymentController::class, 'store']);
-
-    Route::get('/reviews', [ReviewController::class, 'index']);
-    Route::post('/reviews', [ReviewController::class, 'store']);
-    Route::put('/reviews/{id}', [ReviewController::class, 'update']);
-    Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
-});
-
-// ✅ NOTIFICATIONS ROUTES
-Route::middleware(['auth'])->prefix('notifications')->group(function () {
-    Route::get('/', [NotificationController::class, 'index']);
-    Route::get('/unread', [NotificationController::class, 'unread']);
-    Route::post('/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
-    Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
-    Route::delete('/{id}', [NotificationController::class, 'destroy']);
-    Route::delete('/', [NotificationController::class, 'clear']);
-});
-
-// ✅ PUBLIC ROUTES FOR GUESTS TO BROWSE TOURS
-Route::get('/tours', [TourController::class, 'index']);
-Route::get('/tours/{id}', [TourController::class, 'show']);
-Route::get('/tours/category/{categoryId}', [TourController::class, 'showByCategory']);
-
+              {tab === 1 && (
+                <Box sx={{ mt: 3 }}>
+                  <Typography variant="body1" color="text.secondary">
+                    Billing Information section coming soon...
+                  </Typography>
+                </Box>
+              )}
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+}

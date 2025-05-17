@@ -31,7 +31,7 @@ const Hero = () => {
         </h1>
 
         {/* Categories Section */}
-        <div
+       {/*<div
           className="d-flex flex-wrap justify-content-center gap-3 mb-4"
           data-aos="fade-up"
           data-aos-delay="200"
@@ -53,7 +53,7 @@ const Hero = () => {
               </small>
             </div>
           ))}
-        </div>
+        </div>*/}
 
         {/* Search Box */}
         <div className="search-box p-4 rounded-4 shadow-lg mx-auto" data-aos="fade-up">

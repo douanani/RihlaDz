@@ -3,6 +3,8 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline, Box, IconButton } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Header from './components/Header';
@@ -20,10 +22,11 @@ import Contact from './pages/Contact';
 import TourPage from './pages/TourPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import AccountSettings from './pages/AccountSettings';
+import AccountSettings from './pages/Profile/AccountSettings';
 import AgencyDashboard from './pages/Dashboard/AgencyDashboard';
 import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import ResetPassword from './pages/RestPassword';
+import ForgotPassword from './pages/ForgotPassword';
 export default function App() {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
@@ -72,11 +75,14 @@ export default function App() {
         <Route path='/agency-dashboard' element={<AgencyDashboard />} />
         <Route path='/admin-dashboard' element={<AdminDashboard />} />
         <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='*' element={<Error />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
       </Routes>
+        <ToastContainer />
+
 
       {!isAuthPage && <Footer />}
     </ThemeProvider>
+    
   );
 }
 

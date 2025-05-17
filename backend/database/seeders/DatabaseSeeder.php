@@ -133,7 +133,7 @@ if ($agency && $category) {
             'start_date' => now()->addDays(5),
             'end_date' => now()->addDays(7),
             'location' => 'Jijel, Algeria',
-            'thumbnail' => 'jijel.jpg',
+            'thumbnail' => 'algeria-hero.jpg',
         ]
     );
 }
