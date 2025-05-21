@@ -10,7 +10,7 @@ class TourController extends Controller
     // هادي دالة index ترجع قائمة الرحلات، فيها العلاقات مع category و agency، مرتبة من الأحدث للأقدم، ومقسمين على صفحات (10 في كل صفحة)
     public function index()
     {
-        return Tour::with('category', 'agency')->latest()->paginate(10);
+        return Tour::with('category', 'agency')->latest()->paginate(9);
     }
 
     // هادي الدالة تستعمل باش تسجل رحلة جديدة
