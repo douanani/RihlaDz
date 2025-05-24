@@ -48,12 +48,13 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      {/* ✅ زر الوضع الداكن */}
-      <Box sx={{ position: 'fixed', bottom: 16, left: 16, zIndex: 1300 }}>
+      {/* ✅ زر الوضع الداكن 
+        <Box sx={{ position: 'fixed', bottom: 16, left: 16, zIndex: 1300 }}>
       <IconButton onClick={toggleColorMode} color="inherit">
           {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
-      </Box>
+      </Box>*/}
+    
 
       {!isAuthPage && <Header mode={mode} toggleColorMode={toggleColorMode} />}
 

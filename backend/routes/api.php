@@ -24,6 +24,8 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 
+use App\Http\Controllers\CategoryController;
+
 
 // ✅ AUTH ROUTES
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -104,3 +106,15 @@ Route::middleware(['auth'])->prefix('notifications')->group(function () {
 Route::get('/tours', [TourController::class, 'index']);
 Route::get('/tours/{id}', [TourController::class, 'show']);
 Route::get('/tours/category/{categoryId}', [TourController::class, 'showByCategory']);
+
+
+// ✅ CATEGORY ROUTES
+Route::get('/categories', [CategoryController::class, 'index']); // 👈 مفتوحة للجميع
+
+Route::middleware(['auth', 'isAdmin'])->prefix('admin/categories')->group(function () {
+    Route::get('/{id}', [CategoryController::class, 'show']);
+    Route::post('/', [CategoryController::class, 'store']);
+    Route::put('/{id}', [CategoryController::class, 'update']);
+    Route::delete('/{id}', [CategoryController::class, 'destroy']);
+});
+

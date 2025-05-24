@@ -8,10 +8,54 @@ use App\Models\Tour;
 class TourController extends Controller
 {
     // هادي دالة index ترجع قائمة الرحلات، فيها العلاقات مع category و agency، مرتبة من الأحدث للأقدم، ومقسمين على صفحات (10 في كل صفحة)
-    public function index()
-    {
-        return Tour::with('category', 'agency')->latest()->paginate(9);
+   public function index(Request $request)
+{
+    $query = Tour::with('category', 'agency');
+
+    // 🔍 Keyword (title أو description)
+    if ($request->filled('keyword')) {
+        $keyword = $request->keyword;
+        $query->where(function ($q) use ($keyword) {
+            $q->where('title', 'like', "%$keyword%")
+              ->orWhere('description', 'like', "%$keyword%");
+        });
     }
+
+    // 📍 Location
+    if ($request->filled('location')) {
+        $query->where('location', $request->location);
+    }
+
+    // 🗓️ Start Date
+    if ($request->filled('date')) {
+        $query->whereDate('start_date', '>=', $request->date);
+    }
+
+    // ⏳ Duration
+    if ($request->filled('duration')) {
+        $query->where('duration', $request->duration);
+    }
+
+    // 🏷️ Category
+    if ($request->filled('category')) {
+        $query->where('category_id', $request->category);
+    }
+
+    // 💰 Price range
+    if ($request->filled('minPrice')) {
+        $query->where('price', '>=', $request->minPrice);
+    }
+    if ($request->filled('maxPrice')) {
+        $query->where('price', '<=', $request->maxPrice);
+    }
+
+    // 🧾 Pagination
+    $perPage = $request->input('per_page', 9);
+    $tours = $query->latest()->paginate($perPage);
+
+    return response()->json($tours);
+}
+
 
     // هادي الدالة تستعمل باش تسجل رحلة جديدة
     public function store(Request $request)
